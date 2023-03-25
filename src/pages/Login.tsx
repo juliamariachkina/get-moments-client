@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMeLazyQuery } from "../queries/me";
 import { auth } from "../utils/firebase-config";
-import { Auth } from "firebase/auth";
 import { LoginOptions } from "../components/LoginOptions";
 import {
   EmailLoginModal,
@@ -28,15 +27,15 @@ export const LoginPage: FC = () => {
   const methods = useForm<LoginForm>({ mode: "onChange" });
   const { handleSubmit, getValues } = methods;
 
-  const userToken = localStorage.getItem("token");
+  // const userToken = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!userToken) {
-      return;
-    }
-    getMe();
-    console.log(auth);
-  }, [userToken]);
+  // useEffect(() => {
+  //   if (!userToken) {
+  //     return;
+  //   }
+  //   getMe();
+  //   console.log(auth);
+  // }, [userToken]);
 
   useEffect(() => {
     if (!meLoading && meData?.me?.id) {

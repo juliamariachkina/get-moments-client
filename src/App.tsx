@@ -8,8 +8,8 @@ import { HomePage } from "./pages/Home";
 import { RootLayout } from "./pages/RootLayout";
 import { ErrorPage } from "./pages/Error";
 
-import { ApolloProvider } from "@apollo/client";
-import { getApolloClient} from "./utils/apollo-client";
+import { ApolloProvider, useApolloClient } from "@apollo/client";
+import { client, getNewLink } from "./utils/apollo-client";
 import { LoginPage } from "./pages/Login";
 import { FC, useContext } from "react";
 
@@ -25,10 +25,14 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "login", element: <LoginPage /> },
-      { path: "logout", element: <HomePage />, loader: () => {
-        signOut(auth);
-        return null;
-      } },
+      {
+        path: "logout",
+        element: <HomePage />,
+        loader: () => {
+          signOut(auth);
+          return null;
+        },
+      },
       { path: "events", element: <EventsPage /> },
       { path: "events/:slug", element: <EventDetailPage /> },
     ],
@@ -36,10 +40,8 @@ const router = createBrowserRouter([
 ]);
 
 export const App: FC = () => {
-  const userCtx = useContext(UserContext);
-  const apolloClient = getApolloClient(userCtx.token);
   return (
-    <ApolloProvider client={apolloClient}>
+    <ApolloProvider client={client}>
       <RouterProvider router={router} />
     </ApolloProvider>
   );

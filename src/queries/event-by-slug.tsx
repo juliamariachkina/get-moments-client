@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 
-const EVENT_BY_SLUG = gql`
+export const EVENT_BY_SLUG = gql`
   query eventBySlug($slug: String) {
     eventBySlug(slug: $slug) {
       name
@@ -15,5 +15,5 @@ const EVENT_BY_SLUG = gql`
 `;
 
 export const useEventBySlugQuery = (slug: string) => {
-  return useQuery(EVENT_BY_SLUG, { variables: { slug } });
+  return useQuery(EVENT_BY_SLUG, { variables: { slug }, fetchPolicy: "cache-only" });
 };

@@ -2,13 +2,11 @@ import {
   createContext,
   FC,
   ReactNode,
-  useContext,
   useEffect,
   useState,
 } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../utils/firebase-config";
-import { setContext } from "@apollo/client/link/context";
 
 export const UserContext = createContext<{
   user: User | undefined;
