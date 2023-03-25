@@ -1,4 +1,3 @@
-import { ApolloError, useApolloClient } from "@apollo/client";
 import { FC } from "react";
 import { json, useParams } from "react-router-dom";
 import { EventItem } from "../components/EventItem";

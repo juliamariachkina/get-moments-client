@@ -1,9 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { relayStylePagination } from "@apollo/client/utilities";
 
-const FEATURED_EVENTS = gql`
-  query featuredEvents($cursor: String) {
-    featuredEvents(first: 1, after: $cursor) {
+export const FEATURED_EVENTS = gql`
+  query featuredEvents($after: String) {
+    featuredEvents(first: 3, after: $after) {
       pageInfo {
         startCursor
         endCursor

@@ -1,8 +1,13 @@
 import { EventsList } from "../components/EventsList";
 import { EventObjectTypeEdge } from "../types/event-object-type-edge";
-import { useFeaturedEventsQuery } from "../queries/featured-events";
-import { Event } from "../types/event";
+import {
+  FEATURED_EVENTS,
+  useFeaturedEventsQuery,
+} from "../queries/featured-events";
 import { FC } from "react";
+import { client } from "../utils/apollo-client";
+import { json } from "react-router-dom";
+import { Button } from "../components/button/Button";
 
 export const EventsPage: FC = () => {
   const { data, loading, fetchMore, error } = useFeaturedEventsQuery();
@@ -13,26 +18,16 @@ export const EventsPage: FC = () => {
     return <p>Error</p>;
   }
 
-  const nodes: Event[] = data.featuredEvents.edges.map(
+  const pageInfo = data.featuredEvents.pageInfo;
+  const nodes = data.featuredEvents.edges.map(
     (edge: EventObjectTypeEdge) => edge.node
   );
-  const pageInfo = data.featuredEvents.pageInfo;
 
   const loadMore = () => {
     if (pageInfo.hasNextPage) {
       fetchMore({
         variables: {
-          cursor: pageInfo.endCursor,
-        },
-      });
-    }
-  };
-
-  const loadPrev = () => {
-    if (pageInfo.hasPreviousPage) {
-      fetchMore({
-        variables: {
-          cursor: pageInfo.startCursor,
+          after: pageInfo.endCursor,
         },
       });
     }
@@ -41,10 +36,23 @@ export const EventsPage: FC = () => {
   return (
     <div>
       <EventsList events={nodes} />
-      <div>
-        <button onClick={loadPrev}>Previous</button>
-        <button onClick={loadMore}>Next</button>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button onClick={loadMore} disabled={!pageInfo.hasNextPage}>
+          Next
+        </Button>
       </div>
     </div>
   );
+};
+
+export const loadEvents = async () => {
+  console.log("Loader is starting");
+  try {
+    await client.query({
+      query: FEATURED_EVENTS,
+    });
+  } catch (e) {
+    throw json({ data: e });
+  }
+  return null;
 };
