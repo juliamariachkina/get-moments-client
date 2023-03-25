@@ -1,6 +1,8 @@
-import "./App.css";
-
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 
 import { EventsPage } from "./pages/Events";
 import { EventDetailPage } from "./pages/EventDetail";
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       {
         path: "logout",
-        element: <HomePage />,
+        element: <Navigate to="/" replace />,
         loader: () => {
           signOut(auth);
           return null;

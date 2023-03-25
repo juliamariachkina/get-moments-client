@@ -6,7 +6,7 @@
   justify-content: space-between;
 }
 
-.container button {
+.backButton {
   background-color: var(--color-gray-700);
   color: white;
   border: none;
@@ -21,11 +21,11 @@
   margin: 0 1rem;
 }
 
-.container button:hover {
+.backButton:hover {
   background-color: var(--color-primary-800);
 }
 
-.container button:active {
+.backButton:active {
   background-color: var(--color-primary-800);
   transform: translateY(2px);
 }

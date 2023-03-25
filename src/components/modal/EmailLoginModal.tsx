@@ -1,32 +1,40 @@
 import { FC } from "react";
 import { Modal, ModalProps } from "./Modal";
 import { ControlledTextField } from "../form/ControlledTextField";
-import { Form, FormProps } from "../form/Form";
+import { Form } from "../form/Form";
 import { Button } from "../button/Button";
 import { AuthError } from "firebase/auth";
+import { useForm } from "react-hook-form";
 
-export type LoginForm = {
+type LoginForm = Readonly<{
   email: string;
   password: string;
-};
+}>;
 
-type Props = Omit<ModalProps, "children" | "header"> &
-  Omit<FormProps<LoginForm>, "children"> & {
+type Props = Omit<ModalProps, "children" | "header"> & {
     loginError?: AuthError;
-    isButtonDisabled: boolean;
+    isLoginDisabled: boolean;
+    show: boolean;
+    onSubmit: (email: string, password: string) => void;
   };
 
 export const EmailLoginModal: FC<Props> = ({
   show,
   onModalClose,
-  methods,
   onSubmit,
   loginError,
-  isButtonDisabled,
+  isLoginDisabled,
 }) => {
+  const methods = useForm<LoginForm>({ mode: "onChange" });
+  const { handleSubmit, getValues } = methods;
+
+  const submit = () => {
+    const {email, password} = getValues();
+    return onSubmit(email, password);
+  }
   return (
     <Modal show={show} onModalClose={onModalClose} header="Login">
-      <Form methods={methods} onSubmit={onSubmit}>
+      <Form onSubmit={handleSubmit(submit)}>
         <ControlledTextField
           name="email"
           type="email"
@@ -49,7 +57,7 @@ export const EmailLoginModal: FC<Props> = ({
             mobile app to Sign up.
           </p>
         )}
-        <Button type="submit" disabled={isButtonDisabled}>
+        <Button type="submit" disabled={isLoginDisabled}>
           Login
         </Button>
       </Form>

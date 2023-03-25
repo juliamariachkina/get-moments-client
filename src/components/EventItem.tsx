@@ -14,7 +14,7 @@ export const EventItem: FC<Props> = ({ event }) => {
 
   return (
     <div className={styles.container}>
-      <button onClick={() => navigate("/events")}>&#60;</button>
+      <button className={styles.backButton} onClick={() => navigate("/events")}>&#60;</button>
       <div className={styles.event}>
         <img src={event.image} alt={event.name} />
         <h2>{event.name}</h2>

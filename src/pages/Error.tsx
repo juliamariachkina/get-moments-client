@@ -2,10 +2,10 @@ import { FC } from "react";
 import { useRouteError } from "react-router-dom";
 import { MainNavigation } from "../components/layout/MainNavigation";
 
-type Error = {
+type Error = Readonly<{
   data: string;
   status?: number;
-};
+}>;
 
 const isError = (obj: unknown): obj is Error => {
   return (
@@ -19,18 +19,7 @@ const isError = (obj: unknown): obj is Error => {
 
 export const ErrorPage: FC = () => {
   const error = useRouteError();
-  console.error(error);
-
-  let title = "An error occurred!";
-  let message = "Something went wrong :(";
-
-  if (isError(error)) {
-    if (error.status && error.status === 404) {
-      title = "Not found!";
-      message = "Could not find resource or page.";
-    }
-    message = error.data;
-  }
+  const { title, message } = createErrorTitleAndMessage(error);
 
   return (
     <>
@@ -41,4 +30,17 @@ export const ErrorPage: FC = () => {
       </div>
     </>
   );
+};
+
+const createErrorTitleAndMessage = (error: unknown) => {
+  if (isError(error)) {
+    if (error.status && error.status === 404) {
+      return {
+        title: "Not found!",
+        message: "Could not find resource or page.",
+      };
+    }
+    return { title: "Not found!", message: error.data };
+  }
+  return { title: "An error occurred!", message: "Something went wrong :(" };
 };

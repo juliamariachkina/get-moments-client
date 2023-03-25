@@ -1,40 +1,35 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   useSignInWithApple,
   useSignInWithEmailAndPassword,
   useSignInWithFacebook,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase-config";
 import { LoginOptions } from "../components/LoginOptions";
 import {
   EmailLoginModal,
-  LoginForm,
 } from "../components/modal/EmailLoginModal";
-import { UserContext } from "../store/user";
+import { useUserContext } from "../store/user";
 
 export const LoginPage: FC = () => {
-  const {user} = useContext(UserContext);
+  const {user} = useUserContext();
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
   const [signInWithApple] = useSignInWithApple(auth);
-  const [signInWithEmailAndPassword, emailUser, loadingLogin, loginError] =
+  const [signInWithEmailAndPassword, , loadingLogin, loginError] =
     useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const methods = useForm<LoginForm>({ mode: "onChange" });
-  const { handleSubmit, getValues } = methods;
 
   useEffect(() => {
     if (user) {
       navigate("/");
     }
-  }, [user]);
+  }, [user, navigate]);
 
-  const handleConfirm = () => {
-    const { email, password } = getValues();
+  const signInWithEmail = (email: string, password: string) => {
     signInWithEmailAndPassword(email, password);
   };
 
@@ -70,10 +65,9 @@ export const LoginPage: FC = () => {
       <EmailLoginModal
         show={showLoginPopup}
         onModalClose={() => setShowLoginPopup(false)}
-        methods={methods}
-        onSubmit={() => handleSubmit(handleConfirm)}
+        onSubmit={signInWithEmail}
         loginError={loginError}
-        isButtonDisabled={loadingLogin}
+        isLoginDisabled={loadingLogin}
       />
     </div>
   );

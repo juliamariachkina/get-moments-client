@@ -1,14 +1,21 @@
-import { createContext, FC, ReactNode, useEffect, useState } from "react";
+import { createContext, FC, ReactNode, useContext, useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../utils/firebase-config";
 import { getNewLink } from "../utils/apollo-client";
 import { client } from "../utils/apollo-client";
+import { Loader } from "../components/Loader";
 
-export const UserContext = createContext<{
+type Context = Readonly<{
   user: User | null;
   token: string;
   isLoading: boolean;
-}>({ user: null, token: "", isLoading: true });
+}>;
+
+const UserContext = createContext<Context>({
+  user: null,
+  token: "",
+  isLoading: true,
+});
 
 type Props = {
   children?: ReactNode;
@@ -21,7 +28,6 @@ export const UserProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (optUser) => {
-      console.log(client.cache);
       setUser(optUser);
       if (optUser) {
         optUser.getIdToken().then((userToken) => {
@@ -40,7 +46,7 @@ export const UserProvider: FC<Props> = ({ children }) => {
   }, []);
 
   if (isLoading) {
-    return <></>;
+    return <Loader />;
   }
 
   return (
@@ -49,3 +55,7 @@ export const UserProvider: FC<Props> = ({ children }) => {
     </UserContext.Provider>
   );
 };
+
+export const useUserContext = () => {
+  return useContext(UserContext);
+}

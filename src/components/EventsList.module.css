@@ -5,7 +5,7 @@
 
 .list {
   display: flex;
-  flex-flow: wrap;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   padding: 2rem;
   gap: 3rem;

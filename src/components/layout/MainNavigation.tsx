@@ -1,11 +1,11 @@
-import { FC, useContext } from "react";
+import { FC } from "react";
 import { NavLink } from "react-router-dom";
-import { UserContext } from "../../store/user";
+import { useUserContext } from "../../store/user";
 
 import styles from "./MainNavigation.module.css";
 
 export const MainNavigation: FC = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUserContext();
 
   const loggedInLinks = [
     { name: "Home", to: "/" },

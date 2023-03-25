@@ -2,10 +2,10 @@ import { FC } from "react";
 import { Button } from "../components/button/Button";
 
 type Props = Readonly<{
-  options: {
+  options: readonly Readonly<{
     name: string;
     onClick: () => void;
-  }[];
+  }>[];
 }>;
 
 export const LoginOptions: FC<Props> = ({ options }) => {

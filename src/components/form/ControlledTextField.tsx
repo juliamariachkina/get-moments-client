@@ -1,14 +1,20 @@
-import { Control, Controller, FieldValues, Path, PathValue } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldValues,
+  Path,
+  PathValue,
+} from "react-hook-form";
 import { HTMLInputTypeAttribute } from "react";
 
-type Props<FormMethods extends FieldValues> = {
+type Props<FormMethods extends FieldValues> = Readonly<{
   name: Path<FormMethods>;
   type: HTMLInputTypeAttribute;
   placeholder: string;
   label: string;
   control: Control<FormMethods, any>;
   defaultValue: PathValue<FormMethods, Path<FormMethods>>;
-};
+}>;
 
 export const ControlledTextField = <FormMethods extends FieldValues>({
   name,
@@ -27,6 +33,7 @@ export const ControlledTextField = <FormMethods extends FieldValues>({
         <>
           <label htmlFor={name}>{label}</label>
           <input
+            id={name}
             type={type}
             value={value}
             placeholder={placeholder}
