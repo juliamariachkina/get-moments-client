@@ -3,16 +3,15 @@ import { EventObjectTypeEdge } from "../types/event-object-type-edge";
 import { useFeaturedEventsQuery } from "../queries/featured-events";
 import { Event } from "../types/event";
 import { FC } from "react";
-import { QueryResult } from "../components/QueryResult";
-import { json } from "react-router-dom";
 
 export const EventsPage: FC = () => {
   const { data, loading, fetchMore, error } = useFeaturedEventsQuery();
   if (loading) return <p>Loading...</p>;
 
-  // if (error) {
-  //   throw new Error("my error");
-  // }
+  if (error) {
+    console.log(error);
+    return <p>Error</p>;
+  }
 
   const nodes: Event[] = data.featuredEvents.edges.map(
     (edge: EventObjectTypeEdge) => edge.node

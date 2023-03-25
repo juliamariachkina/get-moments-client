@@ -3,7 +3,7 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { EventsPage } from "./pages/Events";
-import { EventDetailPage } from "./pages/EventDetail";
+import { EventDetailPage, loadEvent } from "./pages/EventDetail";
 import { HomePage } from "./pages/Home";
 import { RootLayout } from "./pages/RootLayout";
 import { ErrorPage } from "./pages/Error";
@@ -15,7 +15,7 @@ import { FC, useContext } from "react";
 
 import { signOut } from "firebase/auth";
 import { auth } from "./utils/firebase-config";
-import { UserContext } from "./store/user";
+import { UserContext, UserProvider } from "./store/user";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
         },
       },
       { path: "events", element: <EventsPage /> },
-      { path: "events/:slug", element: <EventDetailPage /> },
+      { path: "events/:slug", element: <EventDetailPage />, loader: ({params}) => loadEvent(params.slug ?? "") },
     ],
   },
 ]);
@@ -42,7 +42,9 @@ const router = createBrowserRouter([
 export const App: FC = () => {
   return (
     <ApolloProvider client={client}>
-      <RouterProvider router={router} />
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
     </ApolloProvider>
   );
 };
