@@ -9,13 +9,43 @@ import { RootLayout } from "./pages/RootLayout";
 import { ErrorPage } from "./pages/Error";
 
 import {
+  ApolloClient,
+  InMemoryCache,
   ApolloProvider,
+  createHttpLink,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import Login from "./pages/Login";
+import { relayStylePagination } from "@apollo/client/utilities";
 import { FC } from "react";
 
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+const httpLink = createHttpLink({
+  uri: "https://api.getmoments.com/v1.0/",
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("token");
+  console.log(token);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ?? "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          featuredEvents: relayStylePagination(),
+        },
+      },
+    },
+  }),
+});
 
 const router = createBrowserRouter([
   {
