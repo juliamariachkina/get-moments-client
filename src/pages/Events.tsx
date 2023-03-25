@@ -1,4 +1,3 @@
-import { Card } from "../components/Card";
 import { EventsList } from "../components/EventsList";
 import { EventObjectTypeEdge } from "../types/event-object-type-edge";
 import { useFeaturedEventsQuery } from "../queries/featured-events";

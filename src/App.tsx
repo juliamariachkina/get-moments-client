@@ -8,44 +8,14 @@ import { HomePage } from "./pages/Home";
 import { RootLayout } from "./pages/RootLayout";
 import { ErrorPage } from "./pages/Error";
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-} from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-import Login from "./pages/Login";
-import { relayStylePagination } from "@apollo/client/utilities";
-import { FC } from "react";
+import { ApolloProvider } from "@apollo/client";
+import { getApolloClient} from "./utils/apollo-client";
+import { LoginPage } from "./pages/Login";
+import { FC, useContext } from "react";
 
-const httpLink = createHttpLink({
-  uri: "https://api.getmoments.com/v1.0/",
-});
-
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token");
-  console.log(token);
-  return {
-    headers: {
-      ...headers,
-      authorization: token ?? "",
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          featuredEvents: relayStylePagination(),
-        },
-      },
-    },
-  }),
-});
+import { signOut } from "firebase/auth";
+import { auth } from "./utils/firebase-config";
+import { UserContext } from "./store/user";
 
 const router = createBrowserRouter([
   {
@@ -54,7 +24,11 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "login", element: <Login /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "logout", element: <HomePage />, loader: () => {
+        signOut(auth);
+        return null;
+      } },
       { path: "events", element: <EventsPage /> },
       { path: "events/:slug", element: <EventDetailPage /> },
     ],
@@ -62,9 +36,11 @@ const router = createBrowserRouter([
 ]);
 
 export const App: FC = () => {
+  const userCtx = useContext(UserContext);
+  const apolloClient = getApolloClient(userCtx.token);
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <RouterProvider router={router} />
     </ApolloProvider>
   );
-}
+};

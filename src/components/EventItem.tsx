@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { Event, EventExtended } from "../types/event";
+import { EventExtended } from "../types/event";
 import { getDate } from "../utils/EventUtils";
 
 import styles from "./EventItem.module.css";
