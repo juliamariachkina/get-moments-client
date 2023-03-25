@@ -1,5 +1,5 @@
 import { Control, Controller, FieldValues, Path, PathValue } from "react-hook-form";
-import { FC, HTMLInputTypeAttribute } from "react";
+import { HTMLInputTypeAttribute } from "react";
 
 type Props<FormMethods extends FieldValues> = {
   name: Path<FormMethods>;

@@ -1,4 +1,3 @@
-import { Modal } from "flowbite-react";
 import { FC, useEffect, useState } from "react";
 import {
   useSignInWithApple,
@@ -8,23 +7,16 @@ import {
 } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/button/Button";
-import { ControlledTextField } from "../components/form/ControlledTextField";
-import { Form } from "../components/form/Form";
 import { useMeLazyQuery } from "../queries/me";
 import { auth } from "../utils/firebase-config";
 import { Auth } from "firebase/auth";
+import { LoginOptions } from "../components/LoginOptions";
+import {
+  EmailLoginModal,
+  LoginForm,
+} from "../components/modal/EmailLoginModal";
 
-type RouterState = {
-  from: string;
-};
-
-type LoginForm = {
-  email: string;
-  password: string;
-};
-
-const Login: FC = () => {
+export const LoginPage: FC = () => {
   const [getMe, { data: meData, loading: meLoading }] = useMeLazyQuery();
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
@@ -43,7 +35,7 @@ const Login: FC = () => {
       return;
     }
     getMe();
-    console.log(meData);
+    console.log(auth);
   }, [userToken]);
 
   useEffect(() => {
@@ -54,10 +46,27 @@ const Login: FC = () => {
 
   const handleConfirm = () => {
     const { email, password } = getValues();
-    signInWithEmailAndPassword(email, password).then(() =>
-      storeTokenInLocalStorage(auth)
-    );
+    signInWithEmailAndPassword(email, password);
   };
+
+  const loginOptions = [
+    {
+      name: "Continue with Facebook",
+      onClick: () => signInWithFacebook(),
+    },
+    {
+      name: "Continue with Google",
+      onClick: () => signInWithGoogle(),
+    },
+    {
+      name: "Continue with Apple",
+      onClick: () => signInWithApple(),
+    },
+    {
+      name: "Continue with email and password",
+      onClick: () => setShowLoginPopup(true),
+    },
+  ];
 
   return (
     <div
@@ -68,74 +77,21 @@ const Login: FC = () => {
         margin: "auto",
       }}
     >
-      <div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Button
-            onClick={() =>
-              signInWithFacebook().then(() => storeTokenInLocalStorage(auth))
-            }
-          >
-            Continue with Facebook
-          </Button>
-          <Button
-            onClick={() =>
-              signInWithGoogle().then(() => storeTokenInLocalStorage(auth))
-            }
-          >
-            Continue with Google
-          </Button>
-          <Button
-            onClick={() =>
-              signInWithApple().then(() => storeTokenInLocalStorage(auth))
-            }
-          >
-            Continue with Apple
-          </Button>
-          <Button onClick={() => setShowLoginPopup(true)}>
-            Continue with email and password
-          </Button>
-        </div>
-      </div>
-      <Modal show={showLoginPopup} onClose={() => setShowLoginPopup(false)}>
-        <Modal.Header>Login</Modal.Header>
-        <Modal.Body>
-          <Form methods={methods} onSubmit={handleSubmit(handleConfirm)}>
-            <ControlledTextField
-              name="email"
-              type="email"
-              placeholder="john@doe.com"
-              label="Email"
-              control={methods.control}
-              defaultValue=""
-            />
-            <ControlledTextField
-              name="password"
-              type="password"
-              placeholder="Enter strong password"
-              label="Password"
-              control={methods.control}
-              defaultValue=""
-            />
-            {loginError && (
-              <p>
-                Email or password incorrect or user does not exist. Please use
-                the mobile app to Sign up.
-              </p>
-            )}
-            <Button type="submit" disabled={loadingLogin}>
-              Login
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      <LoginOptions options={loginOptions} />
+      <EmailLoginModal
+        show={showLoginPopup}
+        onModalClose={() => setShowLoginPopup(false)}
+        methods={methods}
+        onSubmit={() => handleSubmit(handleConfirm)}
+        loginError={loginError}
+        isButtonDisabled={loadingLogin}
+      />
     </div>
   );
 };
 
-export default Login;
-
-const storeTokenInLocalStorage = (auth: Auth) => {
-  auth.currentUser
-    ?.getIdToken()
-    .then((token: string) => localStorage.setItem("token", token));
-};
+// const storeTokenInLocalStorage = (auth: Auth) => {
+//   auth.currentUser
+//     ?.getIdToken()
+//     .then((token: string) => localStorage.setItem("token", token));
+// };

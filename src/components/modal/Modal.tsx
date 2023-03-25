@@ -1,14 +1,14 @@
 import { Modal as ModalFlowbite } from "flowbite-react";
 import { FC, ReactNode } from "react";
 
-type Props = {
+export type ModalProps = {
     show: boolean,
     onModalClose: () => void,
     header?: string,
     children: ReactNode,
 }
 
-export const Modal: FC<Props> = ({show, onModalClose, header, children}) => {
+export const Modal: FC<ModalProps> = ({show, onModalClose, header, children}) => {
   return(
     <ModalFlowbite show={show} onClose={onModalClose}>
       <ModalFlowbite.Header>{header}</ModalFlowbite.Header>
