@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# Getting Started
+
+## Before build
+
+This project requires firebase config in /src/utils/firebase-config.tsx. The content of firebase-config.tsx should be similar to firebase-config.example.tsx with firebaseConfig object properties filled in with data from firebase.
+
+## Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
