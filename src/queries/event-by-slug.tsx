@@ -15,5 +15,5 @@ export const EVENT_BY_SLUG = gql`
 `;
 
 export const useEventBySlugQuery = (slug: string) => {
-  return useQuery(EVENT_BY_SLUG, { variables: { slug }, fetchPolicy: "cache-only" });
+  return useQuery(EVENT_BY_SLUG, { variables: { slug } });
 };

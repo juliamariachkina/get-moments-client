@@ -2,8 +2,8 @@ import "./App.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { EventsPage, loadEvents } from "./pages/Events";
-import { EventDetailPage, loadEvent } from "./pages/EventDetail";
+import { EventsPage } from "./pages/Events";
+import { EventDetailPage } from "./pages/EventDetail";
 import { HomePage } from "./pages/Home";
 import { RootLayout } from "./pages/RootLayout";
 import { ErrorPage } from "./pages/Error";
@@ -33,8 +33,8 @@ const router = createBrowserRouter([
           return null;
         },
       },
-      { path: "events", element: <EventsPage />, loader: () => loadEvents() },
-      { path: "events/:slug", element: <EventDetailPage />, loader: ({params}) => loadEvent(params.slug ?? "") },
+      { path: "events", element: <EventsPage /> },
+      { path: "events/:slug", element: <EventDetailPage /> },
     ],
   },
 ]);

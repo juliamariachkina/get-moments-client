@@ -1,58 +1,36 @@
 import { EventsList } from "../components/EventsList";
 import { EventObjectTypeEdge } from "../types/event-object-type-edge";
-import {
-  FEATURED_EVENTS,
-  useFeaturedEventsQuery,
-} from "../queries/featured-events";
+import { useFeaturedEventsQuery } from "../queries/featured-events";
 import { FC } from "react";
-import { client } from "../utils/apollo-client";
-import { json } from "react-router-dom";
 import { Button } from "../components/button/Button";
+import { QueryResult } from "../components/QueryResult";
 
 export const EventsPage: FC = () => {
   const { data, loading, fetchMore, error } = useFeaturedEventsQuery();
-  if (loading) return <p>Loading...</p>;
 
-  if (error) {
-    console.log(error);
-    return <p>Error</p>;
-  }
-
-  const pageInfo = data.featuredEvents.pageInfo;
-  const nodes = data.featuredEvents.edges.map(
+  const pageInfo = data?.featuredEvents.pageInfo;
+  const nodes = data?.featuredEvents.edges.map(
     (edge: EventObjectTypeEdge) => edge.node
   );
 
   const loadMore = () => {
-    if (pageInfo.hasNextPage) {
+    if (pageInfo?.hasNextPage) {
       fetchMore({
         variables: {
-          after: pageInfo.endCursor,
+          after: pageInfo?.endCursor,
         },
       });
     }
   };
 
   return (
-    <div>
+    <QueryResult loading={loading} error={error}>
       <EventsList events={nodes} />
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button onClick={loadMore} disabled={!pageInfo.hasNextPage}>
-          Next
+        <Button onClick={loadMore} disabled={!pageInfo?.hasNextPage}>
+          Load More
         </Button>
       </div>
-    </div>
+    </QueryResult>
   );
-};
-
-export const loadEvents = async () => {
-  console.log("Loader is starting");
-  try {
-    await client.query({
-      query: FEATURED_EVENTS,
-    });
-  } catch (e) {
-    throw json({ data: e });
-  }
-  return null;
 };

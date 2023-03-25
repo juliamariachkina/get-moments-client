@@ -5,36 +5,35 @@ import { getNewLink } from "../utils/apollo-client";
 import { client } from "../utils/apollo-client";
 
 export const UserContext = createContext<{
-  user: User | undefined;
+  user: User | null;
   token: string;
   isLoading: boolean;
-}>({ user: undefined, token: "", isLoading: true });
+}>({ user: null, token: "", isLoading: true });
 
 type Props = {
   children?: ReactNode;
 };
 
 export const UserProvider: FC<Props> = ({ children }) => {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (optUser) => {
-      console.info("USER CHANGE", optUser);
-      setUser(optUser ?? undefined);
+      console.log(client.cache);
+      setUser(optUser);
       if (optUser) {
         optUser.getIdToken().then((userToken) => {
-          console.log("I am here");
           setIsLoading(false);
           setToken(userToken);
           client.setLink(getNewLink(userToken));
-          console.log(client);
         });
       } else {
-        setToken("");
         setIsLoading(false);
+        setToken("");
         client.setLink(getNewLink());
+        client.clearStore();
       }
     });
     return () => unsubscribe();

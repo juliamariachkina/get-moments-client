@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import {
   useSignInWithApple,
   useSignInWithEmailAndPassword,
@@ -7,16 +7,16 @@ import {
 } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useMeLazyQuery } from "../queries/me";
 import { auth } from "../utils/firebase-config";
 import { LoginOptions } from "../components/LoginOptions";
 import {
   EmailLoginModal,
   LoginForm,
 } from "../components/modal/EmailLoginModal";
+import { UserContext } from "../store/user";
 
 export const LoginPage: FC = () => {
-  const [getMe, { data: meData, loading: meLoading }] = useMeLazyQuery();
+  const {user} = useContext(UserContext);
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
   const [signInWithApple] = useSignInWithApple(auth);
@@ -27,21 +27,11 @@ export const LoginPage: FC = () => {
   const methods = useForm<LoginForm>({ mode: "onChange" });
   const { handleSubmit, getValues } = methods;
 
-  // const userToken = localStorage.getItem("token");
-
-  // useEffect(() => {
-  //   if (!userToken) {
-  //     return;
-  //   }
-  //   getMe();
-  //   console.log(auth);
-  // }, [userToken]);
-
   useEffect(() => {
-    if (!meLoading && meData?.me?.id) {
+    if (user) {
       navigate("/");
     }
-  }, [meData, meLoading, navigate]);
+  }, [user]);
 
   const handleConfirm = () => {
     const { email, password } = getValues();
@@ -88,9 +78,3 @@ export const LoginPage: FC = () => {
     </div>
   );
 };
-
-// const storeTokenInLocalStorage = (auth: Auth) => {
-//   auth.currentUser
-//     ?.getIdToken()
-//     .then((token: string) => localStorage.setItem("token", token));
-// };
