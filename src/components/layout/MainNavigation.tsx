@@ -25,6 +25,14 @@ export const MainNavigation: FC = () => {
             Events
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            className={({ isActive }) => (isActive ? styles.active : undefined)}
+            to="/login"
+          >
+            Login
+          </NavLink>
+        </li>
       </ul>
     </header>
   );

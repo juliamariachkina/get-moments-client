@@ -1,0 +1,63 @@
+.container {
+  max-width: 60rem;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.container button {
+  background-color: var(--color-gray-700);
+  color: white;
+  border: none;
+  height: 3rem;
+  width: 3rem;
+  font-size: larger;
+  font-weight: bolder;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px var(--color-gray-800);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 1rem;
+}
+
+.container button:hover {
+  background-color: var(--color-primary-800);
+}
+
+.container button:active {
+  background-color: var(--color-primary-800);
+  transform: translateY(2px);
+}
+
+.event {
+  max-width: 50rem;
+  margin: auto;
+  padding: 1rem;
+  background-color: #474646;
+}
+
+.event img {
+  max-width: 48rem;
+  object-fit: none;
+}
+
+.event h2 {
+  text-align: left;
+  padding: 1rem 0;
+}
+
+.address {
+  font-size: large;
+  color: var(--color-gray-300);
+}
+
+.date {
+  font-size: large;
+  color: var(--color-gray-300);
+}
+
+.description {
+  padding: 1rem 0;
+  border-top: var(--color-gray-100) solid 1px;
+}
