@@ -1,3 +1,33 @@
+# Core Administration Site for GetMoments.com
+
+Created as a solution to the home assignment for GetMoments frontend position, this repository provides a part of the core administration site. Specifically, login page, page with user events and event details page. This solution implements all of the requirements (listed below).
+
+In this project I got introductory experience with GraphQL and several frontend libraries: React Hook Form, React Firebase, Flowbite and Apollo.
+
+########## Assignment ##########
+
+# Get Moments Frontend Test Case
+
+Get Moments Admin - core
+# Description
+Create a basic React project as a core of Administration site for project GetMoments.com
+
+Get Moments project:
+allows fans at music and sport events to record videos and send them via mobile app to our cloud,
+we create a video cut composed of these user-generated videos and deliver it back to the users
+they can share it on social media
+
+The purpose of the administration site is to allow organizers to create & manage events and to see info about the past events (statistics, download user videos etc.)
+
+In the test case, the graphics and UX are not important, just focus on the following functionality:
+* login using Firebase
+* list all user's events (using this API endpoint): https://api.dev.getmoments.com/docs/#query-myEvents
+* print info about each event (similar to the mobile app home screen)
+* display event detail (similar to the mobile app event detail)
+
+The API is GraphQL and here is documentation: https://api.dev.getmoments.com/docs/ 
+
+###########################################################################
 # Getting Started
 
 ## Before build
